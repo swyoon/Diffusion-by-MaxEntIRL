@@ -22,18 +22,18 @@ python -m pytest tests/
 
 ## TODO & Status
 
-[] 2D  
-[] CIFAR-10 DDPM 
-    [] Training
-    [] Generation
-[] CIFAR-10 DDGAN
-    [] Training
-    [v] Generation
-[] ImageNet64
-    [] Training
-    [] Generation
-[] Anomaly Detection
-[] FID Evaluation
+- [ ] 2D  
+- [ ] CIFAR-10 DDPM 
+    - [ ] Training
+    - [ ] Generation
+- [ ] CIFAR-10 DDGAN
+    - [ ] Training
+    - [x] Generation
+- [ ] ImageNet64
+    - [ ] Training
+    - [ ] Generation
+- [ ] Anomaly Detection
+- [ ] FID Evaluation
 
 
 ## Datasets
