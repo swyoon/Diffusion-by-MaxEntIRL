@@ -1,0 +1,8 @@
+# @package _global_
+data:
+  name: cifar10 
+  data_dir: datasets
+  # dataset:
+  #   _target_: loader.synthetic.sample2d
+  #   data: 8gaussians
+  #   scale_factor: 1

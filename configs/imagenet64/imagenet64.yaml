@@ -1,0 +1,9 @@
+data:
+  name: imagenet64
+  data_dir: datasets/imagenet
+  cachefile: .datasets_imagenet
+  class_cond: True
+  deterministic: False
+  image_size: 64
+  n_class: 1000
+

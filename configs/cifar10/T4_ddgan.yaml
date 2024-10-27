@@ -1,0 +1,57 @@
+sampler_net:
+  _target_: models.ddgan.models.ncsnpp_generator_adagn.NCSNpp
+  config:
+    _target_: models.ddgan.NCSNppArgs
+
+sampler:
+  _target_: models.ddgan.DDGANSampler
+  n_timesteps: 4
+  sample_shape: [3, 32, 32]
+  trainable_beta: fix_last 
+  use_z: True
+
+energy: Null
+
+value:
+  _target_: models.value.TimeIndependentValue
+  net:
+    _target_: models.modules.IGEBMEncoderV2
+    in_chan: 3
+    out_chan: 1
+    use_spectral_norm: False
+    keepdim: False
+    out_activation: linear
+    avg_pool_dim: 1
+    learn_out_scale: True
+    nh: 128
+
+trainer:
+  _target_: models.DxMI.trainer.DxMI_Trainer
+  tau1: 0.1
+  tau2: 0.01
+  gamma: 1
+  use_sampler_beta: True 
+  n_timesteps: 4
+  time_cost: 0
+  time_cost_sig: 1
+  entropy_in_value: Null
+  velocity_in_value: Null
+  value_resample: True
+  adavelreg: 0.99
+  
+training:
+  sampler_ckpt: ddgan_checkpoints/cifar10/ddgan_cifar10_exp1/netG_1200.pth
+  value_ckpt: Null
+  fid_epoch: 1  # calculate FID per this much epoch, None means not calculate
+  n_epochs: 100
+  batchsize: 128
+  sampling_batchsize: 100
+  n_fid_samples: 10000
+  n_critic: 1
+  n_generator: 1
+  lr: 1e-7
+  v_lr: 1e-5
+  beta_lr: 1e-5
+  seed: 112233
+  log_every: 50
+

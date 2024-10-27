@@ -1,0 +1,80 @@
+diffusion:
+    sigma_min: 0.002
+    sigma_max: 80.0
+    image_size: 256
+    num_channels: 256 
+    num_res_blocks: 2
+    num_heads: 4
+    num_heads_upsample: -1
+    num_head_channels: 64
+    attention_resolutions: "32,16,8"
+    channel_mult: ""
+    dropout: 0.0
+    class_cond: False 
+    use_checkpoint: False
+    use_scale_shift_norm: False 
+    resblock_updown: True 
+    use_fp16: True 
+    use_new_attention_order: False
+    learn_sigma: False
+    weight_schedule: "uniform"
+    distillation: False  # boundary condition of consistency model
+
+sampler:
+  sample_shape: [3, 256, 256]
+  n_timesteps: 4
+  class_cond: False 
+  num_classes: Null
+  trainable_beta: fix_last
+  sigma_min: 0.002
+  sigma_max: 80.0
+  stochastic_last: True
+  rho: 4.0
+
+trainer:
+  _target_: models.GCD.v4.GCD_DiDP_NoTime
+  tau1: 0.1
+  tau2: 0.01
+  gamma: 1
+  skip_running_last: 1
+  n_timesteps: 4
+  use_sampler_beta: true
+  adavelreg: 0.99
+  entropy_in_value: null
+  velocity_in_value: null
+  value_grad_clip: true
+  time_cost: 0
+  time_cost_sig: 1
+  sigma_scale: 30
+
+value:
+  _target_: models.GCD.modules.TimeIndependentValue
+  net:
+    _target_: models.modules.IGEBMEncoderV3
+    in_chan: 3
+    out_chan: 1
+    use_spectral_norm: False
+    keepdim: False
+    out_activation: linear
+    avg_pool_dim: 1
+    learn_out_scale: True
+    nh: 128
+
+
+training:
+  pretrained_path: ../consistency_models/pretrained/edm_bedroom256_ema.pt
+  value_ckpt: Null
+  n_iter: 100000
+  batchsize: 64
+  sampling_batchsize: 100
+  n_fid_samples: 5000
+  seed: 42
+  # sampler optimizer
+  lr: 1e-8
+  v_lr: 1e-5
+  beta_lr: 1.0e-06
+  weight_decay: 0.
+  initial_log_loss_scale: 13
+  log_every: 20
+  fid_every: 100
+

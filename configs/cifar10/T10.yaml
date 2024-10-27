@@ -1,0 +1,62 @@
+sampler_net:
+ _target_: models.DxMI.unet_small.Model
+ resolution: 32
+ in_channels: 3
+ out_ch: 3
+ ch: 128
+ ch_mult: [1,2,2,2]
+ num_res_blocks: 2
+ attn_resolutions: [16,]
+ dropout: 0.1
+
+sampler:
+  _target_: models.DxMI.var_sampler.VARSampler
+  n_timesteps: 10
+  sample_shape: [3, 32, 32]
+  trainable_beta: fix_last 
+
+energy: Null
+
+value:
+  _target_: models.value.TimeIndependentValue
+  net:
+    _target_: models.modules.IGEBMEncoderV2
+    in_chan: 3
+    out_chan: 1
+    use_spectral_norm: False
+    keepdim: False
+    out_activation: linear
+    avg_pool_dim: 1
+    learn_out_scale: True
+    nh: 128
+    
+
+trainer:
+  _target_: models.DxMI.trainer.DxMI_Trainer
+  tau1: 0.1
+  tau2: 0.01
+  gamma: 1
+  use_sampler_beta: True
+  time_cost: 0
+  adavelreg: 0.99
+  entropy_in_value: Null
+  velocity_in_value: Null
+  time_cost_sig: True
+    # skip_running_last: 2
+  
+training:
+  sampler_ckpt: pretrained/cifar10_ddpm/model.ckpt.pth
+  value_ckpt: Null
+  fid_epoch: 1  # calculate FID per this much epoch, None means not calculate
+  n_epochs: 200
+  batchsize: 128
+  sampling_batchsize: 100
+  n_fid_samples: 10000
+  n_critic: 1
+  n_generator: 1
+  lr: 1e-7
+  v_lr: 1e-5
+  seed: 112233
+  log_every: 50
+  beta_lr: 1e-5
+

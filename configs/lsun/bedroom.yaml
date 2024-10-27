@@ -1,0 +1,9 @@
+data:
+  name: lsun_bedroom 
+  data_dir: datasets/lsun_bedroom_train
+  cachefile: .datasets_lsun_bedroom_train
+  class_cond: False 
+  deterministic: False
+  image_size: 256
+  n_class: 0
+
