@@ -26,6 +26,8 @@ pip install ...
 pip install -r requirements.txt
 ```
 
+<span style="color: red">Known issue</span>: `models.DxMI.var_sampler.VARSampler` only works with numpy version less than 2.0. For CIFAR-10 experiments, use `conda install "numpy<2.0"` or `pip install numpy==1.26.4`.
+
 
 ## Unit tests
 
